@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // rcpp_hello
 List rcpp_hello();
-RcppExport SEXP fisim_rcpp_hello() {
+RcppExport SEXP _fisim_rcpp_hello() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,7 +17,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"fisim_rcpp_hello", (DL_FUNC) &fisim_rcpp_hello, 0},
+    {"_fisim_rcpp_hello", (DL_FUNC) &_fisim_rcpp_hello, 0},
     {NULL, NULL, 0}
 };
 

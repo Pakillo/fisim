@@ -3,7 +3,7 @@ Type: Package
 Title: Forest Inventory Simulator (fisim) is a package for simulating response
     and samplign designs common in forest inventories.
 Version: 0.1.0
-Author: Sebastian Schnell
+Author: Sebastian Schnell, Henning Aberle
 Maintainer: Sebastian Schnell <Sebastian.Schnell@uni-goettingen.de>
 URL: http://github.com/sebschnell/
 Description: The main purpose of the package is to illustrate basic statisitcal

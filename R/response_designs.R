@@ -47,6 +47,7 @@ fixed_area <- function(tree_loc, sample_loc, r, k = NULL) {
   attr(s, "sample_size") <- nrow(sample_loc);
   attr(s, "response_design") <- "fixed_area";
   attr(s, "plot_radius") <- r;
+  attr(s, "ef") <- 10000/(pi*r^2);
   return(s);
 }
 
