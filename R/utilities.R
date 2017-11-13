@@ -16,17 +16,19 @@
 extract_data <- function(dt_pop, s) {
   if (!is.data.table(dt_pop)) stop("dt_pop is not a data.table object!");
 
-  dt_s_tree <- dt_pop[s];
-  dt_s_tree[, ':='(id = as.integer(names(s)),
+  dt_s_tree <- dt_pop[s[, "s"]];
+  dt_s_tree[, ':='(id_set = s[, "id_set"],
+                   id_point = s[, "id_point"],
                    ef = attributes(s)$ef)];
 
   # Make sure that all plot IDs are present in the output
-  dt_plot_id <- data.table(id = 1:attributes(s)$sample_size);
-  dt_s_tree <- dt_s_tree[dt_plot_id, on = "id"];
+  dt_plot_id <- data.table(id_point = 1:attributes(s)$sample_size);
+  dt_s_tree <- dt_s_tree[dt_plot_id, on = "id_point"];
 
   setattr(dt_s_tree, "response_design", attributes(s)$response_design);
   return(dt_s_tree);
 }
+
 
 #' Helper function to summarize tree-level sample data to the plot-level for
 #' estimation of poplation parameters
@@ -51,10 +53,11 @@ sum_data <- function(dt_s_tree, target_vars) {
   }
   dt_s_plot <- dt_s_tree[,
                          lapply(.SD, function(x) sum(ef*f_edge*x)),
-                         by = id,
+                         keyby = c("id_set", "id_point"),
                          .SDcols = target_vars];
   return(dt_s_plot);
 }
+
 
 #' Helper function to estimate density of tree locations per unit area using a
 #' kernel smoothed intensity function
@@ -87,7 +90,7 @@ est_density <- function(tree_loc) {
 #'   function
 #' @param boundary A \code{\link[sp]{SpatialPolygons}} object containing one
 #'   polygon, describing the boundary of the population.
-#' @param on Indicate on which column \code{dt_s_tree} and \code{dt_s_loc}
+#' @param on Indicate on which columns \code{dt_s_tree} and \code{dt_s_loc}
 #'   should be joined, see \code{\link[data.table]{data.table}}.
 #'
 #' @return A vector with row indices identifying trees in dt_s_tree that should
@@ -96,15 +99,22 @@ est_density <- function(tree_loc) {
 #'   solution to the boundary overlap problem. Forest Science 50, 427–435.
 #' @import data.table
 #' @export
-edge_corr_wt <- function(dt_s_tree, dt_s_loc, boundary, on = "id") {
+edge_corr_wt <- function(dt_s_tree,
+                         dt_s_loc,
+                         boundary,
+                         on = c("id_set", "id_point")) {
   dt_s_tree <- dt_s_tree[dt_s_loc, on = on];
 
   # Distance to sample location
-  dt_s_tree[, ':='(d_x = x_rel - x_sl,
-                   d_y = y_rel - y_sl)];
+  dt_s_tree[,
+            ':='(d_x = x_rel - x_pt,
+                   d_y = y_rel - y_pt),
+            by = on];
   # Walkthrough points
-  dt_s_tree[, ':='(x_wt = x_rel + d_x,
-                   y_wt = y_rel + d_y)];
+  dt_s_tree[,
+            ':='(x_wt = x_rel + d_x,
+                   y_wt = y_rel + d_y),
+            by = on];
 
   wt_points <- sp::SpatialPoints(as.matrix(dt_s_tree[!is.na(x_rel), list(x_wt, y_wt)]));
   return(which(rgeos::gWithin(wt_points, boundary, byid = TRUE) == FALSE));

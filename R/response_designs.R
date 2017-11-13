@@ -7,6 +7,9 @@
 #' @param r The radius of the fixed-area sample plot in the same units as the
 #'   coorinates in \code{tree_loc} and \code{sample_loc}.
 #' @param k Number of neighbors to search for within \code{r}. See details.
+#' @param n Sample size. The number of point locations selected at which trees
+#'   should be sampled.
+#' @param M Number of independent samples of size \code{n}.
 #' @details The RANN package is used to find all trees within the specified
 #'   radius. The RANN package is a wrapper for the Approximate Near Neighbor
 #'   (ANN) C++ library allowing for fast nearest-neighbor searches using
@@ -20,12 +23,12 @@
 #'   recommended to provide a large enough \code{k} when the function is used in
 #'   simulations.
 #' @return An integer matrix where rows represent sample locations and columns
-#'   representing indices of trees in \code{tree_loc} that are selected at
-#'   the individual sample locations. Zeroes are used to indicate no neighbours
-#'   and to ensure a rectangular data format. See the output of the
+#'   representing indices of trees in \code{tree_loc} that are selected at the
+#'   individual sample locations. Zeroes are used to indicate no neighbours and
+#'   to ensure a rectangular data format. See the output of the
 #'   \code{\link[RANN]{nn2}} function.
 #' @export
-fixed_area <- function(tree_loc, sample_loc, r, k = NULL) {
+fixed_area <- function(tree_loc, sample_loc, r, k = NULL, n, M = 1) {
   if (is.null(k)) {
     dens <- est_density(tree_loc);
     k <- ceiling(dens$max*r^2*pi*2); # Multiply by 2 to make sure all neighbors within r are included
@@ -39,12 +42,14 @@ fixed_area <- function(tree_loc, sample_loc, r, k = NULL) {
                   radius = r);
 
   s_init <- as.vector(t(nn$nn.idx));
-  sl_id <- rep(1:nrow(nn$nn.idx), each = ncol(nn$nn.idx)); # sample location id
-  i_init <- s_init != 0; # index of non-zero elements
-  s <- s_init[i_init];
-  sl_id <- sl_id[i_init];
-  names(s) <- sl_id;
-  attr(s, "sample_size") <- nrow(sample_loc);
+  id_set <- rep(1:M, each = n*ncol(nn$nn.idx)); # sample location id
+  id_point <- rep(rep(1:n, each = ncol(nn$nn.idx)), M);
+  i_sel <- s_init != 0; # index of selected elements
+  s <- s_init[i_sel];
+  id_set <- id_set[i_sel];
+  id_point <- id_point[i_sel];
+  s <- cbind(id_set, id_point, s);
+  attr(s, "sample_size") <- n;
   attr(s, "response_design") <- "fixed_area";
   attr(s, "plot_radius") <- r;
   attr(s, "ef") <- 10000/(pi*r^2);

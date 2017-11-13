@@ -8,9 +8,12 @@
 #' @import data.table
 #' @export
 est_srs <- function(data) {
-  y_hat <- as.matrix(data[, lapply(.SD, mean), .SDcols = 2:ncol(data)]);
-  v_hat <- as.matrix(data[, lapply(.SD, var), .SDcols = 2:ncol(data)]/nrow(data));
-  return(data.table(var = colnames(y_hat),
-                    y_hat = y_hat[1, ],
-                    v_hat = v_hat[1, ]));
+  dt_est <- data[,
+                 list(variable = names(.SD),
+                      y_hat = sapply(.SD, mean),
+                      v_hat = sapply(.SD, function(x) var(x)/length(x))),
+                 by = id_set,
+                 .SDcols = 3:ncol(data)]
+
+  return(dt_est);
 }
