@@ -4,22 +4,19 @@
 \alias{k_tree}
 \title{The \code{k} trees closest to a sample location are selected into the sample}
 \usage{
-k_tree(tree_loc, sample_loc, k = 6)
+k_tree(tree_pop, sample_loc, k = 6)
 }
 \arguments{
-\item{tree_loc}{A matrix where each is an individual observation and the
-first column is the x-coordinate and the second column is the y-coordinate.}
+\item{tree_pop}{A tree population object (\code{\link{tree_pop}})}
 
-\item{sample_loc}{A matrix with x-coordinates in the first column and
-y-coordinates in the second. Each row represents one sample location.}
+\item{sample_loc}{A sample location object (\code{\link{sample_loc}}) as
+provided by the \code{\link{xy_sample}} function.}
 
 \item{k}{Number of nearets neighbors.}
 }
 \value{
-An integer matrix where rows represent sample locations and columns
-  represent indices of the trees in \code{tree_loc} that are selected at the
-  individual sample locations. See the output of the \code{\link[RANN]{nn2}}
-  function.
+An object of class \code{\link{response}} with indices of trees in
+  \code{tree_pop} that are selected at the individual sample locations.
 }
 \description{
 The \code{k} trees closest to a sample location are selected into the sample

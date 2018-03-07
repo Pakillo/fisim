@@ -1,15 +1,12 @@
 #' Select trees at sample locations using fixed-area plots
 #'
-#' @param tree_loc A matrix where each row is an individual observation and the
-#'   first column is the x-coordinate and the second column is the y-coordinate.
-#' @param sample_loc A matrix with x-coordinates in the first column and
-#'   y-coordinates in the second. Each row represents one sample location.
+#' @param tree_pop A tree population object (\code{\link{tree_pop}})
+#' @param sample_loc A sample location object (\code{\link{sample_loc}}) as
+#'   provided by the \code{\link{xy_sample}} function.
 #' @param r The radius of the fixed-area sample plot in the same units as the
 #'   coorinates in \code{tree_loc} and \code{sample_loc}.
 #' @param k Number of neighbors to search for within \code{r}. See details.
-#' @param n Sample size. The number of point locations selected at which trees
-#'   should be sampled.
-#' @param M Number of independent samples of size \code{n}.
+#'
 #' @details The RANN package is used to find all trees within the specified
 #'   radius. The RANN package is a wrapper for the Approximate Near Neighbor
 #'   (ANN) C++ library allowing for fast nearest-neighbor searches using
@@ -22,82 +19,97 @@
 #'   Note that the estimation costs some extra computation time and it is thus
 #'   recommended to provide a large enough \code{k} when the function is used in
 #'   simulations.
-#' @return An integer matrix where rows represent sample locations and columns
-#'   representing indices of trees in \code{tree_loc} that are selected at the
-#'   individual sample locations. Zeroes are used to indicate no neighbours and
-#'   to ensure a rectangular data format. See the output of the
-#'   \code{\link[RANN]{nn2}} function.
+#' @return An object of class \code{\link{response}} with indices of trees in
+#'   \code{tree_pop} that are selected at the individual sample locations.
 #' @export
-fixed_area <- function(tree_loc, sample_loc, r, k = NULL, n, M = 1) {
+fixed_area <- function(tree_pop, sample_loc, r, k = NULL) {
+  if (!is.tree_pop(tree_pop)) {
+    stop("'tree_pop' is not an object of class tree_pop");
+  }
+  if (!is.sample_loc(sample_loc)) {
+    stop("'sample_loc' is not an object of class sample_loc");
+  }
   if (is.null(k)) {
-    dens <- est_density(tree_loc);
-    k <- ceiling(dens$max*r^2*pi*2); # Multiply by 2 to make sure all neighbors within r are included
-    k <- min(k, nrow(tree_loc));
+    dens <- est_density(as.matrix(tree_pop$data[, list(x_tree, y_tree)]));
+    k <- ceiling(dens$max*r^2*pi*1.05); # Increase by 5% to make sure all neighbors within r are included
+    k <- min(k, nrow(tree_pop$data));
   }
 
-  nn <- RANN::nn2(data = tree_loc,
-                  query = sample_loc,
+  nn <- RANN::nn2(data = tree_pop$data[, list(x_tree, y_tree)],
+                  query = sample_loc$data[, list(x_s, y_s)],
                   k = k,
                   searchtype = "radius",
                   radius = r);
 
-  s_init <- as.vector(t(nn$nn.idx));
-  id_set <- rep(1:M, each = n*ncol(nn$nn.idx)); # sample location id
-  id_point <- rep(rep(1:n, each = ncol(nn$nn.idx)), M);
-  i_sel <- s_init != 0; # index of selected elements
-  s <- s_init[i_sel];
-  id_set <- id_set[i_sel];
-  id_point <- id_point[i_sel];
-  s <- cbind(id_set, id_point, s);
-  attr(s, "sample_size") <- n;
-  attr(s, "response_design") <- "fixed_area";
-  attr(s, "plot_radius") <- r;
-  attr(s, "ef") <- 10000/(pi*r^2);
-  return(s);
+  dt_s <- data.table(id_sample = rep(sample_loc$data[, id_sample], each = k),
+                     id_point = rep(sample_loc$data[, id_point], each = k),
+                     s = as.vector(t(nn$nn.idx)));
+  dt_s <- dt_s[s != 0];
+
+  ha <- 10000; # One hectare -> 10000 square meter
+  dt_s[, ef := ha/(pi*r^2)];
+
+  # Add no response
+  dt_s <- dt_s[sample_loc$data[, list(id_sample, id_point)],
+               list(id_sample, id_point, s, ef),
+               on = c("id_sample", "id_point")];
+
+  return(response(data = dt_s,
+                  r_design = "fixed_area",
+                  r_design_parm = r));
 }
+
 
 #' The \code{k} trees closest to a sample location are selected into the sample
 #'
-#' @param tree_loc A matrix where each is an individual observation and the
-#'   first column is the x-coordinate and the second column is the y-coordinate.
-#' @param sample_loc A matrix with x-coordinates in the first column and
-#'   y-coordinates in the second. Each row represents one sample location.
+#' @param tree_pop A tree population object (\code{\link{tree_pop}})
+#' @param sample_loc A sample location object (\code{\link{sample_loc}}) as
+#' provided by the \code{\link{xy_sample}} function.
 #' @param k Number of nearets neighbors.
 #' @details The RANN package is used to find the \code{k} trees clostest to the
 #'   respective sample locations in \code{sample_loc}. The RANN package is a
 #'   wrapper for the Approximate Near Neighbor (ANN) C++ library allowing for
 #'   fast nearest-neighbor searches using kd-trees.
-#' @return An integer matrix where rows represent sample locations and columns
-#'   represent indices of the trees in \code{tree_loc} that are selected at the
-#'   individual sample locations. See the output of the \code{\link[RANN]{nn2}}
-#'   function.
+#' @return An object of class \code{\link{response}} with indices of trees in
+#'   \code{tree_pop} that are selected at the individual sample locations.
 #' @export
-k_tree <- function(tree_loc, sample_loc, k = 6) {
+k_tree <- function(tree_pop, sample_loc, k = 6) {
+  if (!is.tree_pop(tree_pop)) {
+    stop("'tree_pop' is not an object of class tree_pop");
+  }
+  if (!is.sample_loc(sample_loc)) {
+    stop("'sample_loc' is not an object of class sample_loc");
+  }
 
-  nn <- RANN::nn2(data = tree_loc,
-                  query = sample_loc,
-                  k = k,
+  nn <- RANN::nn2(data = tree_pop$data[, list(x_tree, y_tree)],
+                  query = sample_loc$data[, list(x_s, y_s)],
+                  k = k + 1,
                   searchtype = "standard");
 
-  s <- as.vector(t(nn$nn.idx));
-  names(s) <- rep(1:nrow(nn$nn.idx), each = k);
-  attr(s, "sample_size") <- nrow(sample_loc);
-  attr(s, "response_design") <- "k_tree";
-  attr(s, "k") <- k;
-  return(s);
+  dt_s <- data.table(id_sample = rep(sample_loc$data[, id_sample], each = k),
+                     id_point = rep(sample_loc$data[, id_point], each = k),
+                     s = as.vector(t(nn$nn.idx[, 1:k])));
+
+  d_k <- nn$nn.dists[, k];
+  d_k1 <- nn$nn.dists[, k + 1];
+  ha <- 10000; # One hectare -> 10000 square meter
+  dt_ef <- data.table(id_sample = sample_loc$data[, id_sample],
+                      id_point = sample_loc$data[, id_point],
+                      ef = ha/(pi*d_k^2),
+                      ef_alt1 = ha/(pi*(0.5*(d_k + d_k1))^2),
+                      ef_alt2 = ha/(pi*(sqrt(0.5*(d_k^2 + d_k1^2)))^2));
+
+  return(response(data = dt_s[dt_ef, on = c("id_sample", "id_point")],
+                  r_design = "k_tree",
+                  r_design_parm = k));
 }
+
 
 #' Select trees proportional to size using Bitterlich/angle-count method
 #'
-#' @param tree_loc A matrix where each row is an individual observation and the
-#'   first column is the x-coordinate and the second column is the y-coordinate.
-#' @param tree_dbh A vector with trunk diameters in cm measured at a height of
-#'   1.3 m for each observation in \code{tree_loc} (dbh - diameter at breast
-#'   height).
-#' @param sample_loc A data.table object as returned from
-#'   \code{\link{xy_sample}}. The first column is an identifier, the second and
-#'   third store sample location coordinates, respectively. The number of rows
-#'   corresponds to the size of the sample.
+#' @param tree_pop A tree population object (\code{\link{tree_pop}})
+#' @param sample_loc A sample location object (\code{\link{sample_loc}}) as
+#'   provided by the \code{\link{xy_sample}} function.
 #' @param baf Basal area factor. Determines together with the trunk diameter at
 #'   1.3 m height up to which distance trees are included in the sample. Typical
 #'   values for temperate forest conditions range between 1 and 4. The number of
@@ -133,39 +145,39 @@ k_tree <- function(tree_loc, sample_loc, k = 6) {
 #'   to ensure a rectangular data format. See the output of the
 #'   \code{\link[RANN]{nn2}} function.
 #' @export
-angle_count <- function(tree_loc, tree_dbh, sample_loc, baf = 1, k = NULL) {
+angle_count <- function(tree_pop, sample_loc, baf = 1, k = NULL) {
   c <- sqrt(2500/baf);
-  d_crit <- c*tree_dbh/100;
+  d_crit <- c*tree_pop$data[, dbh]/100;
 
   if (is.null(k)) {
-    dens <- est_density(tree_loc);
+    dens <- est_density(as.matrix(tree_pop$data[, list(x_tree, y_tree)]));
     k <- ceiling(dens$max*max(d_crit)^2*pi);
-    k <- min(k, nrow(tree_loc));
+    k <- min(k, nrow(tree_pop$data));
   }
 
-  nn <- RANN::nn2(data = tree_loc,
-                  query = sample_loc,
+  nn <- RANN::nn2(data = tree_pop$data[, list(x_tree, y_tree)],
+                  query = sample_loc$data[, list(x_s, y_s)],
                   k = k,
                   searchtype = "radius",
                   radius = max(d_crit));
 
-  s_init <- as.vector(t(nn$nn.idx));
-  sl_id <- rep(1:nrow(nn$nn.idx), each = ncol(nn$nn.idx)); # sample location id
-  i_init <- s_init != 0; # index of non-zero elements
-  s_init <- s_init[i_init];
-  sl_id <- sl_id[i_init];
+  dt_s <- data.table(id_sample = rep(sample_loc$data[, id_sample], each = k),
+                     id_point = rep(sample_loc$data[, id_point], each = k),
+                     s = as.vector(t(nn$nn.idx)),
+                     d = as.vector(t(nn$nn.dists)));
+  dt_s <- dt_s[s != 0];
+  dt_s[, d_crit := d_crit[s]];
+  dt_s <- dt_s[d <= d_crit];
 
-  d_crit <- d_crit[s_init];
-  d_init <- as.vector(t(nn$nn.dists));
-  d_init <- d_init[i_init];
-  i <- d_init <= d_crit;
-  s <- s_init[i];
-  sl_id <- sl_id[i];
-  names(s) <- sl_id;
+  ha <- 10000; # One hectare -> 10000 square meter
+  dt_s[, ef := ha/(dt_s[, d_crit^2*pi])]
 
-  attr(s, "sample_size") <- nrow(sample_loc);
-  attr(s, "response_design") <- "angle_count";
-  attr(s, "baf") <- baf;
-  attr(s, "ef") <- 10000/(d_crit[i]^2*pi);
-  return(s);
+  # Add no response
+  dt_s <- dt_s[sample_loc$data[, list(id_sample, id_point)],
+               list(id_sample, id_point, s, ef),
+               on = c("id_sample", "id_point")];
+
+  return(response(data = dt_s,
+                  r_design = "angle_count",
+                  r_design_parm = baf));
 }

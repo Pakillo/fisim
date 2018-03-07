@@ -4,20 +4,13 @@
 \alias{angle_count}
 \title{Select trees proportional to size using Bitterlich/angle-count method}
 \usage{
-angle_count(tree_loc, tree_dbh, sample_loc, baf = 1, k = NULL)
+angle_count(tree_pop, sample_loc, baf = 1, k = NULL)
 }
 \arguments{
-\item{tree_loc}{A matrix where each row is an individual observation and the
-first column is the x-coordinate and the second column is the y-coordinate.}
+\item{tree_pop}{A tree population object (\code{\link{tree_pop}})}
 
-\item{tree_dbh}{A vector with trunk diameters in cm measured at a height of
-1.3 m for each observation in \code{tree_loc} (dbh - diameter at breast
-height).}
-
-\item{sample_loc}{A data.table object as returned from
-\code{\link{xy_sample}}. The first column is an identifier, the second and
-third store sample location coordinates, respectively. The number of rows
-corresponds to the size of the sample.}
+\item{sample_loc}{A sample location object (\code{\link{sample_loc}}) as
+provided by the \code{\link{xy_sample}} function.}
 
 \item{baf}{Basal area factor. Determines together with the trunk diameter at
 1.3 m height up to which distance trees are included in the sample. Typical
@@ -42,7 +35,7 @@ Select trees proportional to size using Bitterlich/angle-count method
 \details{
 The selection of trees according to the Bitterlich/ange-count method
   was implemented in several steps. First the critical distance up to which a
-  tree is selected from a specififc sample location is calculated using
+  tree is selected from a specific sample location is calculated using
   \code{tree_dbh} and \code{baf}. The larger \code{tree_dbh} and \code{baf},
   the larger the critical distance of inclusion. In the second step the RANN
   package is used to identify candidate trees for inlcusion into the sample

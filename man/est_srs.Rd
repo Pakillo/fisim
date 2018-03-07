@@ -4,16 +4,24 @@
 \alias{est_srs}
 \title{Simple random sampling estimator of population means}
 \usage{
-est_srs(data)
+est_srs(point_data, est_col = NULL)
 }
 \arguments{
+\item{est_col}{A character vector of column names for which estimates are
+produced. Used when there is more than one way to expand observations from
+individual sample locations.}
+
 \item{data}{A data.table object with plot-level information of stand
-characteristics as comin from the \code{plot_data} function.}
+characteristics as coming from the \code{sum_data} function.}
 }
 \value{
-A data.table object with mean and variance estimates of variables of
-  interest.
+A data.table object with mean and variance estimates for the target
+ variables.
 }
 \description{
 Simple random sampling estimator of population means
+}
+\details{
+Variance estimation is done following the simple random sampling
+  estimator for replicated sampling.
 }

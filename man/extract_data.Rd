@@ -5,7 +5,7 @@
 \title{Helper function to extract population elements into a sample using a list of
 indices}
 \usage{
-extract_data(dt_pop, s)
+extract_data(tree_pop, response)
 }
 \arguments{
 \item{dt_pop}{The population from which to extract sampled elements.}

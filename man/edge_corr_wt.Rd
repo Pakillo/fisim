@@ -5,24 +5,20 @@
 \title{Performs the \emph{walkthrough} edge-correction method for a set of sample
 trees and a given boundary}
 \usage{
-edge_corr_wt(dt_s_tree, dt_s_loc, boundary, on = "id_plot")
+edge_corr_wt(tree_pop, tree_sample, sample_loc)
 }
 \arguments{
-\item{dt_s_tree}{A data.table object as coming from \code{\link{sample_data}}
-function}
+\item{tree_pop}{A \code{\link{tree_pop}} object.}
 
-\item{dt_s_loc}{A data.table object as coming from \code{\link{xy_sample}}
-function}
+\item{tree_sample}{A \code{\link{tree_sample}} object as coming from the
+\code{\link{extract_data}} function.}
 
-\item{boundary}{A \code{\link[sp]{SpatialPolygons}} object containing one
-polygon, describing the boundary of the population.}
-
-\item{on}{Indicate on which column \code{dt_s_tree} and \code{dt_s_loc}
-should be joined, see \code{\link[data.table]{data.table}}.}
+\item{sample_loc}{A \code{\link{sample_loc}} object as created by the
+\code{\link{xy_sample}} function or provided by the user.}
 }
 \value{
-A vector with row indices identifying trees in dt_s_tree that should
-  be counted twice.
+The \code{tree_sample} object with modified \code{f_edge} column
+  indicating which trees are counted twice.
 }
 \description{
 Performs the \emph{walkthrough} edge-correction method for a set of sample
