@@ -6,5 +6,4 @@
 #' @name fisim
 #' @docType package
 #' @import data.table spatstat sp rgeos
-#' @useDynLib fisim
 NULL
