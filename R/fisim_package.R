@@ -5,7 +5,6 @@
 #'
 #' @name fisim
 #' @docType package
-#' @importFrom Rcpp sourceCpp
 #' @import data.table spatstat sp rgeos
 #' @useDynLib fisim
 NULL
