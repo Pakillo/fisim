@@ -31,7 +31,7 @@ fixed_area <- function(tree_pop, sample_loc, r, k = NULL) {
   }
   if (is.null(k)) {
     dens <- est_density(as.matrix(tree_pop$data[, list(x_tree, y_tree)]));
-    k <- ceiling(dens$max*r^2*pi*1.05); # Increase by 5% to make sure all neighbors within r are included
+    k <- ceiling(dens$max*r^2*pi*1.5); # Increase by 50% to make sure all neighbors within r are included
     k <- min(k, nrow(tree_pop$data));
   }
 
