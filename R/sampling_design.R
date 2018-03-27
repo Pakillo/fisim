@@ -15,7 +15,6 @@
 #' @return A \code{\link[data.table]{data.table}} object with \code{M} times
 #'   \code{n} rows holding an identifier and xy-coordinates.
 #' @export
-#'
 xy_sample <- function(sp_poly, n, M = 1, method = 'random', ...) {
   if (tolower(method) == 'random') {
     return(sample_loc(data = xy_sample_random(sp_poly = sp_poly,

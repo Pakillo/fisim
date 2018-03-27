@@ -10,7 +10,7 @@ is.point_data(x)
 \item{x}{An \code{R} object}
 }
 \value{
-TRUE if \code{x} is of class \code{\link{point data}};
+TRUE if \code{x} is of class \code{\link{point_data}};
 }
 \description{
 Check if an object is a point data object.

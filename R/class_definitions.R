@@ -428,7 +428,7 @@ point_data <- function(data, r_design, r_design_parm) {
 #'
 #' @param x An \code{R} object
 #'
-#' @return TRUE if \code{x} is of class \code{\link{point data}};
+#' @return TRUE if \code{x} is of class \code{\link{point_data}};
 #' @export
 is.point_data <- function(x) {
   inherits(x, "point_data");
