@@ -125,7 +125,7 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
   d <- sqrt(cell_size);
   n_os <- a_ext/d^2;
 
-  dt_res <- data.table(id_sample = rep(0L, M*n_os*1.05), # 5% extra rows because of random sample size, empty rows removed later on
+  dt_res <- data.table(id_sample = rep(0L, M*n_os*2), # 100% extra rows because of random sample size, empty rows removed later on
                        id_point = 0L,
                        x_s = 0.0,
                        y_s = 0.0);
@@ -134,15 +134,16 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
   e_cent <- e;
   e_cent["x", ] <- e["x", ] - e["x", "max"]/2;
   e_cent["y", ] <- e["y", ] - e["y", "max"]/2;
-  r_start <- 1L;
+  r_start <- 0L;
+  r_end <- 0L;
   if (random_rot) {
     alpha <- runif(M, min = 0, max = pi);
   }
-  r_d <- runif(M)*d;
+  u_d <- cbind(runif(M)*d, runif(M)*d);
   for (m in seq.int(M)) {
     # Enlarge grid to account for possible rotation
-    x <- seq(1.5*min(e_cent[, "min"]) + r_d[m], 1.5*max(e_cent[, "max"]), d);
-    y <- seq(1.5*min(e_cent[, "min"]) + r_d[m], 1.5*max(e_cent[, "max"]), d);
+    x <- seq(1.5*min(e_cent["x", "min"]) + u_d[m, 1], 1.5*max(e_cent["x", "max"]), d);
+    y <- seq(1.5*min(e_cent["y", "min"]) + u_d[m, 2], 1.5*max(e_cent["y", "max"]), d);
     xy <- expand.grid(x, y);
     # Random rotation
     if (random_rot) {
@@ -162,6 +163,7 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
 
     # Collect results
     n_m <- nrow(xy_sub);
+    r_start <- r_end + 1L;
     r_end <- r_start + n_m - 1L;
     set(dt_res,
         r_start:r_end,
@@ -170,7 +172,6 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
                    id_point = 1:n_m,
                    x_s = xy_sub[, 1],
                    y_s = xy_sub[, 2]));
-    r_start <- r_end + 1L;
   }
   return(dt_res[id_sample != 0]);
 }

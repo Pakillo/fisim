@@ -269,4 +269,3 @@ extract_area <- function(sp_poly) {
                        function(x) lapply(x@Polygons,
                                           function(x) x@area*x@ringDir))));
 }
-
