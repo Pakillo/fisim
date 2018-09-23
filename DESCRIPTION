@@ -14,10 +14,11 @@ Description: The main purpose of the package is to illustrate basic statisitcal
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Depends: data.table, sp, maptools, spatstat
+Depends: data.table, sp, maptools, spatstat, rgeos
 Imports:
     sp,
     maptools,
     spatstat,
-    RANN
+    RANN,
+    rgeos
 RoxygenNote: 6.0.1
