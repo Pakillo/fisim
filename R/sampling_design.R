@@ -69,8 +69,8 @@ xy_sample_random <- function(sp_poly, n, M = 1) {
   y <- unlist(lapply(tri$tiles, function(x) x$bdry[[1]]$y));
 
   s <- sample(length(a), n*M, prob = w, replace = TRUE);
-  r1 <- runif(n*M);
-  r2 <- runif(n*M);
+  r1 <- stats::runif(n*M);
+  r2 <- stats::runif(n*M);
 
   n_vtc <- 3; # Number of vertices in a triangle
   p4_x <- (1 - r1)*x[(s*n_vtc - 2)] + r1*x[(s*n_vtc - 1)];
@@ -137,9 +137,9 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
   r_start <- 0L;
   r_end <- 0L;
   if (random_rot) {
-    alpha <- runif(M, min = 0, max = pi);
+    alpha <- stats::runif(M, min = 0, max = pi);
   }
-  u_d <- cbind(runif(M)*d, runif(M)*d);
+  u_d <- cbind(stats::runif(M)*d, stats::runif(M)*d);
   for (m in seq.int(M)) {
     # Enlarge grid to account for possible rotation
     x <- seq(1.5*min(e_cent["x", "min"]) + u_d[m, 1], 1.5*max(e_cent["x", "max"]), d);

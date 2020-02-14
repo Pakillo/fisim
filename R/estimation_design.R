@@ -26,7 +26,7 @@ est_srs <- function(point_data, est_col = NULL) {
   dt_est <- point_data$data[,
                             list(est_appr = names(.SD),
                                  y_hat = sapply(.SD, mean),
-                                 v_hat = sapply(.SD, var)/.N),
+                                 v_hat = sapply(.SD, stats::var)/.N),
                             by = list(id_sample, variable),
                             .SDcols = est_col];
   return(dt_est);

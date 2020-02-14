@@ -1,12 +1,12 @@
 Package: fisim
 Type: Package
 Title: Forest Inventory Simulator (fisim) is a package for simulating response
-    and samplign designs common in forest inventories.
+    and samplign designs common in forest inventories
 Version: 0.1.0
 Author: Sebastian Schnell, Henning Aberle
 Maintainer: Sebastian Schnell <Sebastian.Schnell@uni-goettingen.de>
 URL: http://github.com/sebschnell/
-Description: The main purpose of the package is to illustrate basic statisitcal
+Description: The main purpose of the package is to illustrate basic statistical
     principles of surveys of environmental resources with a focus on forest
     inventories. The main intention is to use the package in combination with a
     Shiny application to assist teaching in bachelor and master courses on forest
@@ -14,12 +14,14 @@ Description: The main purpose of the package is to illustrate basic statisitcal
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Depends: data.table, sp, maptools, spatstat, rgeos
+Depends: R (>= 2.15.1)
 Imports:
+    data.table,
     sp,
     maptools,
     spatstat,
     RANN,
     rgeos,
+    stats,
     utils
 RoxygenNote: 6.0.1
