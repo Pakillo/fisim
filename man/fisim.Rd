@@ -3,7 +3,6 @@
 \docType{package}
 \name{fisim}
 \alias{fisim}
-\alias{fisim-package}
 \title{fisim}
 \description{
 Forest Inventory Simulator (fisim) is a package for simulating response and

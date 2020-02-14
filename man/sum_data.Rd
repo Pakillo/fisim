@@ -10,7 +10,7 @@ sum_data(tree_sample, target_vars)
 \item{tree_sample}{A \code{\link{tree_sample}} object as coming from
 the \code{\link{extract_data}} function.}
 
-\item{target_var}{A character vector of variable names which should be
+\item{target_vars}{A character vector of variable names which should be
 summarized at the plot level}
 }
 \value{

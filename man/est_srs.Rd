@@ -7,12 +7,12 @@
 est_srs(point_data, est_col = NULL)
 }
 \arguments{
+\item{point_data}{A data.table object with plot-level information of stand
+characteristics as coming from the \code{sum_data} function.}
+
 \item{est_col}{A character vector of column names for which estimates are
 produced. Used when there is more than one way to expand observations from
 individual sample locations.}
-
-\item{data}{A data.table object with plot-level information of stand
-characteristics as coming from the \code{sum_data} function.}
 }
 \value{
 A data.table object with mean and variance estimates for the target

@@ -8,9 +8,9 @@ indices}
 extract_data(tree_pop, response)
 }
 \arguments{
-\item{dt_pop}{The population from which to extract sampled elements.}
+\item{tree_pop}{The population from which to extract sampled elements.}
 
-\item{s}{An integer matrix where rows represent sample locations and columns
+\item{response}{An integer matrix where rows represent sample locations and columns
 represent indices of the trees in \code{dt_pop} that are selected at the
 individual sample locations. Zeroes are used to indicate no neighbours and
 to ensure a rectangular data format.}

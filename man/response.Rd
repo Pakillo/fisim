@@ -9,7 +9,8 @@ response(data, r_design, r_design_parm)
 \arguments{
 \item{data}{A \code{\link[data.table]{data.table}} object holding identifiers
 for the sample and respective point locations and row indices that indicate
-which population elements are selected into the sample.}
+which population elements are selected into the sample. data must have
+the columns "id_sample", "id_point", "s" and "ef".}
 
 \item{r_design}{A \code{character} string indicating the type of the response
 design. One of the following: "fixed_area", "k_tree", "angle_count".}
@@ -18,16 +19,6 @@ design. One of the following: "fixed_area", "k_tree", "angle_count".}
 \code{numeric}. For "fixed_area" the plot radius in meter; for "k_tree" the
 number of trees closest to the sample location; for "angle_count" the basal
 area factor.}
-
-\item{ef}{The expansion factor, i.e., the factor that is used to prorate tree
-attributes to per hectare values (the inverse of the inclusion
-probabilities). Provided by the particular response design functions.}
-
-\item{ef_alt1}{Alternative expansion factor that may be applied when using
-k-tree sampling.}
-
-\item{ef_alt2}{A third alternative expansion factor approximation for k-tree
-sampling}
 }
 \value{
 An object of class \code{response}. A named list with the following

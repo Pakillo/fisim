@@ -1,6 +1,6 @@
 #' Simple random sampling estimator of population means
 #'
-#' @param data A data.table object with plot-level information of stand
+#' @param point_data A data.table object with plot-level information of stand
 #'   characteristics as coming from the \code{sum_data} function.
 #' @param est_col A character vector of column names for which estimates are
 #'   produced. Used when there is more than one way to expand observations from

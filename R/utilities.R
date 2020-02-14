@@ -1,8 +1,8 @@
 #' Helper function to extract population elements into a sample using a list of
 #' indices
 #'
-#' @param dt_pop The population from which to extract sampled elements.
-#' @param s An integer matrix where rows represent sample locations and columns
+#' @param tree_pop The population from which to extract sampled elements.
+#' @param response An integer matrix where rows represent sample locations and columns
 #'   represent indices of the trees in \code{dt_pop} that are selected at the
 #'   individual sample locations. Zeroes are used to indicate no neighbours and
 #'   to ensure a rectangular data format.
@@ -42,7 +42,7 @@ extract_data <- function(tree_pop, response) {
 #'
 #' @param tree_sample A \code{\link{tree_sample}} object as coming from
 #'   the \code{\link{extract_data}} function.
-#' @param target_var A character vector of variable names which should be
+#' @param target_vars A character vector of variable names which should be
 #'   summarized at the plot level
 #'
 #' @return A data.table object with stand characteristics at the plot level.
@@ -88,7 +88,7 @@ sum_data <- function(tree_sample, target_vars) {
 #'
 #' @param tree_sample A \code{\link{tree_sample}} object as coming from the
 #'   \code{\link{extract_data}} function.
-#' @param target_var A character vector of variable names which should be
+#' @param target_vars A character vector of variable names which should be
 #'   summarized at the plot level
 #'
 #' @details For k-tree sampling, individual tree inlcusion probabilities can
@@ -157,7 +157,7 @@ sum_k_tree <- function(tree_sample, target_vars) {
 #'
 #' @param tree_sample A \code{\link{tree_sample}} object as coming from
 #'   the \code{\link{extract_data}} function.
-#' @param target_var A character vector of variable names which should be
+#' @param target_vars A character vector of variable names which should be
 #'   summarized at the plot level
 #'
 #' @return A data.table object with stand characteristics at the plot level.
