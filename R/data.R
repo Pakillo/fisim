@@ -43,3 +43,25 @@
 #'     how often a tree is counted during estimation correcting for edge
 #'     effects, unitless}}
 "hberg_beech"
+
+
+#' Full census of a stand of random trees
+#'
+#' A dataset containing tree stem locations and other attributes of 20000 trees
+#' randomly generated (by ...) on a 1000m by 500m rectangular plot.
+#'
+#' @format An object of class \code{\link{tree_pop}}. The data contains 20000
+#'   rows and 9 columns: \describe{
+#'   \item{id_tree}{Stem number - one tree can have mulitple stems}
+#'   \item{id_stem}{Tree number - repetitions possible due to multiple stems}
+#'   \item{x_tree}{Relative position of the stem center in x-direction}
+#'   \item{y_tree}{Relative position of the stem center in y-direction}
+#'   \item{is_dead}{Was the tree alive or dead?}
+#'   \item{dbh}{Diameter of the stem measured at breast height (1.3m) in cm}
+#'   \item{ba}{Cross-sectional area of the stem at breast height in square
+#'     meters}
+#'   \item{n}{Stem count - helper variable for stem number estimation, unitless}
+#'   \item{f_edge}{Edge factor - helper variable for edge_correction, indicates
+#'     how often a tree is counted during estimation correcting for edge
+#'     effects, unitless}}
+"random_tree"
