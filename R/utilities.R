@@ -240,8 +240,8 @@ edge_corr_wt <- function(tree_pop, tree_sample, sample_loc) {
             by = list(id_sample, id_point)];
 
   # Identify points outside border
-  wt_points <- sp::SpatialPoints(as.matrix(dt_s_tree[!is.na(x_tree), list(x_wt, y_wt)]));
-  idx <- which(rgeos::gWithin(wt_points, tree_pop$boundary, byid = TRUE) == FALSE);
+  wt_points <- sf::st_as_sf(as.data.frame(dt_s_tree[!is.na(x_tree), list(x_wt, y_wt)]), coords=1:2)
+  idx <- which(!sf::st_contains(tree_pop$boundary, wt_points, prepared=TRUE, sparse=FALSE))
 
   return(tree_sample(tree_sample$data[dt_s_tree[!is.na(x_wt)][idx, list(id_sample, id_point, id_tree, id_stem)],
                                       f_edge := 2,
