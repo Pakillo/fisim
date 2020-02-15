@@ -1,7 +1,7 @@
 #' Sample locations in a study area of rectangular shape
 #'
-#' @param sp_poly An object of class \code{\link[sp]{SpatialPolygons}} from the
-#'   \code{sp} package.
+#' @param sf_poly An object of class \code{\link[sf]{sf}} and geometry type
+#'   POLYGON from the \code{sf} package.
 #' @param n Sample size, i.e. number of sample locations.
 #' @param M Number of independent samples of size \code{n}.
 #' @param method character string; 'random' for completely random placement of
@@ -15,30 +15,22 @@
 #' @return A \code{\link[data.table]{data.table}} object with \code{M} times
 #'   \code{n} rows holding an identifier and xy-coordinates.
 #' @export
-xy_sample <- function(sp_poly, n, M = 1, method = 'random', ...) {
-  if (tolower(method) == 'random') {
-    return(sample_loc(data = xy_sample_random(sp_poly = sp_poly,
-                                              n = n,
-                                              M = M),
-                      n = n,
-                      M = M,
-                      method = tolower(method)));
-  } else if (tolower(method) == 'regular') {
-    return(sample_loc(data = xy_sample_regular(sp_poly = sp_poly,
-                                               n = n,
-                                               M = M,
-                                               ...),
-                      n = n,
-                      M = M,
-                      method = tolower(method)))
+xy_sample <- function(sf_poly, n, M = 1, method = 'random', ...) {
+  method <- match.arg(tolower(method), c('random', 'regular'))
+  if (method == 'random') {
+    return(sample_loc(data = xy_sample_random(sf_poly = sf_poly, n = n, M = M),
+                      n = n, M = M, method = method));
+  } else if (method == 'regular') {
+    return(sample_loc(data = xy_sample_regular(sf_poly = sf_poly, n = n, M = M, ...),
+                      n = n, M = M, method = method))
   }
 }
 
 
 #' Place a number of points randomly in a polygon of arbitrary shape
 #'
-#' @param sp_poly An object of class \code{\link[sp]{SpatialPolygons}} from the
-#'   \code{sp} package.
+#' @param sf_poly An object of class \code{\link[sf]{sf}} and geometry type
+#'   POLYGON from the \code{sf} package.
 #' @param n Sample size
 #' @param M Number of independent samples of size \code{n}
 #'
@@ -60,8 +52,9 @@ xy_sample <- function(sp_poly, n, M = 1, method = 'random', ...) {
 #'
 #' @return A \code{\link[data.table]{data.table}} object with \code{M} times
 #'   \code{n} rows holding an identifier and xy-coordinates.
-xy_sample_random <- function(sp_poly, n, M = 1) {
-  tri <- spatstat::triangulate.owin(spatstat::as.owin(sp_poly));
+xy_sample_random <- function(sf_poly, n, M = 1) {
+  # as.owin(sf) leads to different order of tiles and thus different sample points
+  tri <- spatstat::triangulate.owin(maptools::as.owin.SpatialPolygons(sf::as_Spatial(sf::st_geometry(sf_poly))));
   a <- unlist(lapply(tri$tiles, spatstat::area));
   w <- a/sum(a);
 
