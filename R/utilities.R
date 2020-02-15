@@ -249,23 +249,3 @@ edge_corr_wt <- function(tree_pop, tree_sample, sample_loc) {
          r_design = tree_sample$r_design,
          r_design_parm = tree_sample$r_design_parm));
 }
-
-
-#' Helper function to extract the area slots from
-#' \code{\link[sp]{SpatialPolygons}} objects
-#'
-#' @param sp_poly An object of class \code{\link[sp]{SpatialPolygons}}
-#'
-#' @return A numeric vector with the areas of all polygons in the object. The
-#'   areas for polygons that represent holes are stored as negative values.
-#' @examples
-#' library(sp);
-#' library(maptools);
-#' data("state.vbm");
-#' a <- extract_area(state.vbm);
-#' @export
-extract_area <- function(sp_poly) {
-  return(unlist(lapply(sp_poly@polygons,
-                       function(x) lapply(x@Polygons,
-                                          function(x) x@area*x@ringDir))));
-}
