@@ -88,8 +88,8 @@ xy_sample_random <- function(sp_poly, n, M = 1) {
 
 #' Place a regular sampling grid over a polygon of arbitrary shape
 #'
-#' @param sp_poly An object of class \code{\link[sp]{SpatialPolygons}} from the
-#'   \code{sp} package.
+#' @param sf_poly An object of class \code{\link[sf]{sf}} and geometry type
+#'   POLYGON from the \code{sf} package.
 #' @param n Sample size
 #' @param M Number of independent samples of size \code{n}
 #' @param cell_size If missing, a cell size is derived from the sample size
@@ -112,10 +112,10 @@ xy_sample_random <- function(sp_poly, n, M = 1) {
 #'   computation of the \code{M} samples will take while.
 #' @return A \code{\link[data.table]{data.table}} object with approximately
 #'   \code{M} times \code{n} rows holding an identifier and xy-coordinates.
-xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = TRUE) {
-  e <- sp::bbox(sp_poly);
-  a_ext <- prod(apply(e, 1, diff));
-  a <- sum(extract_area(sp_poly));
+xy_sample_regular <- function(sf_poly, n, M = 1, cell_size = NULL, random_rot = TRUE) {
+  e <- sf::st_bbox(sf_poly)
+  a_ext <- (e$xmax - e$xmin) * (e$ymax - e$ymin)
+  a <- sum(sf::st_area(sf_poly))
 
   if (is.null(cell_size)) {
     n_os <- n*a_ext/a; # Oversampling
@@ -131,19 +131,23 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
                        y_s = 0.0);
 
   # Center coordinates
-  e_cent <- e;
-  e_cent["x", ] <- e["x", ] - e["x", "max"]/2;
-  e_cent["y", ] <- e["y", ] - e["y", "max"]/2;
+  #e_cent_x <- e$xmin + (e$xmax - e$xmin)/2
+  #e_cent_y <- e$ymin + (e$ymax - e$ymin)/2
+  e_cent <- e
+  e_cent[c(1, 3)] <- e_cent[c(1, 3)] - e_cent$xmax/2
+  e_cent[c(2, 4)] <- e_cent[c(2, 4)] - e_cent$ymax/2
+
   r_start <- 0L;
   r_end <- 0L;
   if (random_rot) {
     alpha <- stats::runif(M, min = 0, max = pi);
   }
+
   u_d <- cbind(stats::runif(M)*d, stats::runif(M)*d);
   for (m in seq.int(M)) {
     # Enlarge grid to account for possible rotation
-    x <- seq(1.5*min(e_cent["x", "min"]) + u_d[m, 1], 1.5*max(e_cent["x", "max"]), d);
-    y <- seq(1.5*min(e_cent["y", "min"]) + u_d[m, 2], 1.5*max(e_cent["y", "max"]), d);
+    x <- seq(1.5 * e_cent$xmin + u_d[m, 1], 1.5 * e_cent$xmax, d);
+    y <- seq(1.5 * e_cent$ymin + u_d[m, 2], 1.5 * e_cent$ymax, d);
     xy <- expand.grid(x, y);
     # Random rotation
     if (random_rot) {
@@ -152,14 +156,15 @@ xy_sample_regular <- function(sp_poly, n, M = 1, cell_size = NULL, random_rot = 
                     ncol = 2, byrow = TRUE);
       xy <- t(rot %*% t(as.matrix(xy)));
     }
+
     # Back to original coordinates
-    xy[, 1] <- xy[, 1] + e["x", "max"]/2;
-    xy[, 2] <- xy[, 2] + e["y", "max"]/2;
-    sp_xy <- sp::SpatialPoints(xy);
+    xy[, 1] <- xy[, 1] + e$xmax/2
+    xy[, 2] <- xy[, 2] + e$ymax/2
+    sf_xy <- sf::st_as_sf(as.data.frame(xy), coords=1:2)
 
     # Reject points outside the study area
-    idx_over <- is.na(sp::over(sp_xy, sp_poly)) == FALSE;
-    xy_sub <- sp::coordinates(sp_xy[idx_over]);
+    idx_over <- sf::st_contains(sf_poly, sf_xy, prepared=TRUE, sparse=FALSE)
+    xy_sub <- sf::st_coordinates(sf_xy[idx_over, ]);
 
     # Collect results
     n_m <- nrow(xy_sub);
