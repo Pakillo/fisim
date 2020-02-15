@@ -2,10 +2,7 @@
 % Please edit documentation in R/class_definitions.R
 \name{tree_sample}
 \alias{tree_sample}
-\title{The function \code{tree_sample} creates tree sample objects. Such objects
-assign individual tree information from the population to the sample
-locations following a particular response design. The function is only used
-internally by \code{\link{extract_data}}.}
+\title{Tree Sample}
 \usage{
 tree_sample(data, r_design, r_design_parm)
 }
@@ -56,6 +53,6 @@ The \code{\link[data.table]{data.table}} object (\code{data}) should
 
   Some response designs (currently only \code{\link{k_tree}}), may have
   additional alternative expansion factors as optional approximations, where
-  unbiased estimators are missing or difficult to derive. As the column names
-  for these alternatives \code{ef_alt1} and \code{ef_alt2} are used.
+  unbiased estimators are missing or difficult to derive. These additional
+  columns are \code{ef_alt1} and \code{ef_alt2}.
 }

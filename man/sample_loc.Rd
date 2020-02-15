@@ -57,6 +57,8 @@ Before object initialization, a couple of checks are performed,
   \code{\link{xy_sample}} function.
 }
 \examples{
-library(spatstat);
-xy_sample(letterR, n = 10, M = 10, method = "random");
+library(sf)
+poly <- st_polygon(list(rbind(c(0,0), c(1,0), c(3,2), c(2,4), c(1,4), c(0,0)),
+                        rbind(c(1,1), c(1,2), c(2,2), c(1,1))))
+xy_sample(poly, n = 10, M = 10, method = "random");
 }
