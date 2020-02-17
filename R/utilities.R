@@ -249,3 +249,19 @@ edge_corr_wt <- function(tree_pop, tree_sample, sample_loc) {
          r_design = tree_sample$r_design,
          r_design_parm = tree_sample$r_design_parm));
 }
+
+
+#' Helper function to determine the area of the plot given by the boundary element
+#'
+#' @param sf_poly An object of class \code{\link[sf]{sf}} and geometry type POLYGON
+#'
+#' @return A numeric vector with the areas of all polygons in the object.
+#'   Holes within the polygons are already subtracted.
+#'
+#' @examples
+#' a <- extract_area(hberg_beech$boundary)
+#'
+#' @export
+extract_area <- function(sf_poly) {
+  return(sf::st_area(sf_poly));
+}
