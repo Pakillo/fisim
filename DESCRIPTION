@@ -22,7 +22,12 @@ Imports:
     spatstat,
     RANN,
     stats,
-    utils
+    utils,
+    shiny,
+    ggplot2,
+    magrittr,
+    DT,
+    plotly
 Suggests: 
     testthat (>= 2.1.0)
 RoxygenNote: 7.0.2
