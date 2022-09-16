@@ -5,7 +5,6 @@
 #'
 #' @name fisim
 #' @docType package
-#' @import data.table spatstat sp rgeos
 NULL
 
 # avoid R CMD check warnings due to global variables

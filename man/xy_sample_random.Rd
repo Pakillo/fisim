@@ -4,11 +4,11 @@
 \alias{xy_sample_random}
 \title{Place a number of points randomly in a polygon of arbitrary shape}
 \usage{
-xy_sample_random(sp_poly, n, M = 1)
+xy_sample_random(sf_poly, n, M = 1)
 }
 \arguments{
-\item{sp_poly}{An object of class \code{\link[sp]{SpatialPolygons}} from the
-\code{sp} package.}
+\item{sf_poly}{An object of class \code{\link[sf]{sf}} and geometry type
+POLYGON from the \code{sf} package.}
 
 \item{n}{Sample size}
 

@@ -240,8 +240,8 @@ edge_corr_wt <- function(tree_pop, tree_sample, sample_loc) {
             by = list(id_sample, id_point)];
 
   # Identify points outside border
-  wt_points <- sp::SpatialPoints(as.matrix(dt_s_tree[!is.na(x_tree), list(x_wt, y_wt)]));
-  idx <- which(rgeos::gWithin(wt_points, tree_pop$boundary, byid = TRUE) == FALSE);
+  wt_points <- sf::st_as_sf(as.data.frame(dt_s_tree[!is.na(x_tree), list(x_wt, y_wt)]), coords=1:2)
+  idx <- which(!sf::st_contains(tree_pop$boundary, wt_points, prepared=TRUE, sparse=FALSE))
 
   return(tree_sample(tree_sample$data[dt_s_tree[!is.na(x_wt)][idx, list(id_sample, id_point, id_tree, id_stem)],
                                       f_edge := 2,
@@ -251,21 +251,17 @@ edge_corr_wt <- function(tree_pop, tree_sample, sample_loc) {
 }
 
 
-#' Helper function to extract the area slots from
-#' \code{\link[sp]{SpatialPolygons}} objects
+#' Helper function to determine the area of the plot given by the boundary element
 #'
-#' @param sp_poly An object of class \code{\link[sp]{SpatialPolygons}}
+#' @param sf_poly An object of class \code{\link[sf]{sf}} and geometry type POLYGON
 #'
-#' @return A numeric vector with the areas of all polygons in the object. The
-#'   areas for polygons that represent holes are stored as negative values.
+#' @return A numeric vector with the areas of all polygons in the object.
+#'   Holes within the polygons are already subtracted.
+#'
 #' @examples
-#' library(sp);
-#' library(maptools);
-#' data("state.vbm");
-#' a <- extract_area(state.vbm);
+#' a <- extract_area(hberg_beech$boundary)
+#'
 #' @export
-extract_area <- function(sp_poly) {
-  return(unlist(lapply(sp_poly@polygons,
-                       function(x) lapply(x@Polygons,
-                                          function(x) x@area*x@ringDir))));
+extract_area <- function(sf_poly) {
+  return(sf::st_area(sf_poly));
 }

@@ -2,25 +2,21 @@
 % Please edit documentation in R/utilities.R
 \name{extract_area}
 \alias{extract_area}
-\title{Helper function to extract the area slots from
-\code{\link[sp]{SpatialPolygons}} objects}
+\title{Helper function to determine the area of the plot given by the boundary element}
 \usage{
-extract_area(sp_poly)
+extract_area(sf_poly)
 }
 \arguments{
-\item{sp_poly}{An object of class \code{\link[sp]{SpatialPolygons}}}
+\item{sf_poly}{An object of class \code{\link[sf]{sf}} and geometry type POLYGON}
 }
 \value{
-A numeric vector with the areas of all polygons in the object. The
-  areas for polygons that represent holes are stored as negative values.
+A numeric vector with the areas of all polygons in the object.
+  Holes within the polygons are already subtracted.
 }
 \description{
-Helper function to extract the area slots from
-\code{\link[sp]{SpatialPolygons}} objects
+Helper function to determine the area of the plot given by the boundary element
 }
 \examples{
-library(sp);
-library(maptools);
-data("state.vbm");
-a <- extract_area(state.vbm);
+a <- extract_area(hberg_beech$boundary)
+
 }

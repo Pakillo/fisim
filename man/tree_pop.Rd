@@ -12,8 +12,8 @@ individual trees in a forest. Each row represents a tree, while tree
 attributes are stored in columns. A minimum set of attributes with specific
 columns names is required; see Details section.}
 
-\item{boundary}{A \code{\link[sp]{SpatialPolygons}} object that defines the
-border of the forest.}
+\item{boundary}{An \code{\link[sf]{sf}} object of geometry type POLYGON that
+defines the border of the forest.}
 }
 \value{
 An object of class \code{tree_pop}. A named list with the following
@@ -22,8 +22,8 @@ An object of class \code{tree_pop}. A named list with the following
   \enumerate{
   \item \code{$data} A \code{\link[data.table]{data.table}}
   object as described above.
-  \item \code{$boundary} A \code{\link[sp]{SpatialPolygons}} object that
-  defines the border of the forest.
+  \item \code{$boundary} A \code{\link[sf]{sf}} object of geometry type
+  POLYGON that defines the border of the forest.
   }
 }
 \description{

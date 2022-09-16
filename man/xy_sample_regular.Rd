@@ -4,11 +4,11 @@
 \alias{xy_sample_regular}
 \title{Place a regular sampling grid over a polygon of arbitrary shape}
 \usage{
-xy_sample_regular(sp_poly, n, M = 1, cell_size = NULL, random_rot = TRUE)
+xy_sample_regular(sf_poly, n, M = 1, cell_size = NULL, random_rot = TRUE)
 }
 \arguments{
-\item{sp_poly}{An object of class \code{\link[sp]{SpatialPolygons}} from the
-\code{sp} package.}
+\item{sf_poly}{An object of class \code{\link[sf]{sf}} and geometry type
+POLYGON from the \code{sf} package.}
 
 \item{n}{Sample size}
 
