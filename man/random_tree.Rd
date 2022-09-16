@@ -4,7 +4,8 @@
 \name{random_tree}
 \alias{random_tree}
 \title{Full census of a stand of random trees}
-\format{An object of class \code{\link{tree_pop}}. The data contains 20000
+\format{
+An object of class \code{\link{tree_pop}}. The data contains 20000
   rows and 9 columns: \describe{
   \item{id_tree}{Stem number - one tree can have mulitple stems}
   \item{id_stem}{Tree number - repetitions possible due to multiple stems}
@@ -17,7 +18,8 @@
   \item{n}{Stem count - helper variable for stem number estimation, unitless}
   \item{f_edge}{Edge factor - helper variable for edge_correction, indicates
     how often a tree is counted during estimation correcting for edge
-    effects, unitless}}}
+    effects, unitless}}
+}
 \usage{
 random_tree
 }

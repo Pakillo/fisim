@@ -4,7 +4,8 @@
 \name{kalimantan_peat}
 \alias{kalimantan_peat}
 \title{Full census of a peat swamp forest in Kalimantan on Borneo island}
-\format{A data.table with 3523 rows and 8 columns: \describe{
+\format{
+A data.table with 3523 rows and 8 columns: \describe{
   \item{id_tree}{Tree number - repetitions possible due to multiple stems}
   \item{id_stem}{Stem number - one tree can have mulitple stems}
   \item{x_tree}{Relative position of the stem center in x-direction}
@@ -18,7 +19,8 @@
   \item{n}{Stem count - helper variable for stem number estimation, unitless}
   \item{f_edge}{Edge factor - helper variable for edge_correction, indicates
     how often a tree is counted during estimation correcting for edge
-    effects, unitless}}}
+    effects, unitless}}
+}
 \usage{
 kalimantan_peat
 }

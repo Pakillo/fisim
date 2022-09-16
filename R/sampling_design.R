@@ -54,8 +54,8 @@ xy_sample <- function(sf_poly, n, M = 1, method = 'random', ...) {
 #'   \code{n} rows holding an identifier and xy-coordinates.
 xy_sample_random <- function(sf_poly, n, M = 1) {
   # as.owin(sf) leads to different order of tiles and thus different sample points
-  tri <- spatstat::triangulate.owin(maptools::as.owin.SpatialPolygons(sf::as_Spatial(sf::st_geometry(sf_poly))));
-  a <- unlist(lapply(tri$tiles, spatstat::area));
+  tri <- spatstat.geom::triangulate.owin(maptools::as.owin.SpatialPolygons(sf::as_Spatial(sf::st_geometry(sf_poly))));
+  a <- unlist(lapply(tri$tiles, spatstat.geom::area));
   w <- a/sum(a);
 
   x <- unlist(lapply(tri$tiles, function(x) x$bdry[[1]]$x));

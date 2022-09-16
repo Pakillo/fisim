@@ -19,7 +19,8 @@ Imports:
     data.table,
     sf,
     maptools,
-    spatstat,
+    spatstat.core,
+    spatstat.geom,
     RANN,
     stats,
     utils,
@@ -30,4 +31,4 @@ Imports:
     plotly
 Suggests: 
     testthat (>= 2.1.0)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.2.1

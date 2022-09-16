@@ -183,19 +183,19 @@ sum_ef <- function(tree_sample, target_vars) {
 #' @param tree_loc A matrix where each row is an individual observation and the
 #'   first column is the x-coordinate and the second column is the y-coordinate.
 #'
-#' @details An object of class \code{\link[spatstat]{ppp}} is created from the
+#' @details An object of class \code{\link[spatstat.geom]{ppp}} is created from the
 #'   coordinates in \code{tree_loc} and an pixel image of intensity values is
-#'   created using \code{\link[spatstat]{density.ppp}}.
+#'   created using \code{\link[spatstat.core]{density.ppp}}.
 #'
 #' @return A summary of the values from pixel image of intensity values.
 #'
-#' @seealso \link[spatstat]{ppp}, \link[spatstat]{density.ppp}
+#' @seealso \link[spatstat.geom]{ppp}, \link[spatstat.core]{density.ppp}
 #' @export
 est_density <- function(tree_loc) {
-  ppp_tree <- spatstat::ppp(x = tree_loc[, 1], y = tree_loc[, 2],
-                            window = spatstat::owin(xrange = range(tree_loc[, 1]),
+  ppp_tree <- spatstat.geom::ppp(x = tree_loc[, 1], y = tree_loc[, 2],
+                            window = spatstat.geom::owin(xrange = range(tree_loc[, 1]),
                                                     yrange = range(tree_loc[, 2])));
-  dens <- spatstat::density.ppp(ppp_tree);
+  dens <- spatstat.core::density.ppp(ppp_tree);
   return(summary(dens));
 }
 

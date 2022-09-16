@@ -19,10 +19,10 @@ Helper function to estimate density of tree locations per unit area using a
 kernel smoothed intensity function
 }
 \details{
-An object of class \code{\link[spatstat]{ppp}} is created from the
+An object of class \code{\link[spatstat.geom]{ppp}} is created from the
   coordinates in \code{tree_loc} and an pixel image of intensity values is
-  created using \code{\link[spatstat]{density.ppp}}.
+  created using \code{\link[spatstat.core]{density.ppp}}.
 }
 \seealso{
-\link[spatstat]{ppp}, \link[spatstat]{density.ppp}
+\link[spatstat.geom]{ppp}, \link[spatstat.core]{density.ppp}
 }

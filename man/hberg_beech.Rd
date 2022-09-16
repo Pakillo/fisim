@@ -4,7 +4,8 @@
 \name{hberg_beech}
 \alias{hberg_beech}
 \title{Full census of a beech forest in Göttingen, Germany}
-\format{An object of class \code{\link{tree_pop}}. The data contains 270
+\format{
+An object of class \code{\link{tree_pop}}. The data contains 270
   rows and 9 columns: \describe{
   \item{id_tree}{Stem number - one tree can have mulitple stems}
   \item{id_stem}{Tree number - repetitions possible due to multiple stems}
@@ -17,7 +18,8 @@
   \item{n}{Stem count - helper variable for stem number estimation, unitless}
   \item{f_edge}{Edge factor - helper variable for edge_correction, indicates
     how often a tree is counted during estimation correcting for edge
-    effects, unitless}}}
+    effects, unitless}}
+}
 \usage{
 hberg_beech
 }
